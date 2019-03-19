@@ -19,6 +19,6 @@ invoke "use" => sub {
     my @host = space($use);
     info("use space: ", $use ? $use."[".scalar @host."]" : "undef");
 
-}, sub{ keys space() };
+}, sub{ my @host = space();keys @host};
 
 1

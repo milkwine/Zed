@@ -21,15 +21,18 @@ use strict;
 our %CMD = ( quote_args => 0, stderr_discard => 1);
 
 invoke "cmd" => sub {
-    my (@cmd, $pwd, @host) = @_;
+    my (@cmd, $ssh_opt, @host) = @_;
 
-    $pwd = passwd();
     return unless @host = targets();
 
     debug("host: ", \@host );
 
-    if($cmd[0] eq 'sudo')
+    $ssh_opt = env("ssh_options");
+    my $has_private_key = ref $ssh_opt eq "HASH" and $ssh_opt->{key_path};
+
+    if($cmd[0] eq 'sudo' && !$has_private_key)
     {
+        my $pwd = passwd();
         shift @cmd;
         @cmd = ( { stdin_data => "$pwd\n", %CMD }, 'sudo -k;', 'sudo', '-S', '-p', '', '--', @cmd );
 

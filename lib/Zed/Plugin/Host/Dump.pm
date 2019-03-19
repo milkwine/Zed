@@ -21,6 +21,6 @@ invoke "dump" => sub {
     info("$space\[", scalar @host, "]:");
     text(join "\n", @host);
 
-}, sub{ keys space() };
+}, sub{ my @host = space(); keys @host};
 
 1

@@ -3,8 +3,9 @@ username: nobody
 batch:
   idc: ^.+?\..+?\.(.+?)\.
 macro:
-  ip: cmd /sbin/ip addr|grep inet|grep -v 127.0.0.1|awk "{print \$2}"|awk -F"/" "{print
-    \$1}"
+  ip: cmd /sbin/ip addr|grep inet|grep -v 127.0.0.1|awk "{print \$2}"|awk -F"/" "{print \$1}"
+  addsudo: 'cmd sudo echo "foo ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers'
+  adduser: 'cmd sudo useradd -m foo -p pwd'
 plugin:
 - Zed::Plugin::Sys::Echo
 - Zed::Plugin::Sys::Help

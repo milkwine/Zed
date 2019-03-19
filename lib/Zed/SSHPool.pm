@@ -36,15 +36,20 @@ sub get_ssh { $ssh{ $_[0] } }
 
 sub connect
 {
-    my(%error, $user, $pwd);
+    my(%error, $opt, %opt);
 
-    $user = env("username");
-    $pwd = passwd();
+    $opt  = env("ssh_options");
+    %opt  = ref $opt eq "HASH" ? (%OPT, %$opt) : %OPT;
+
+    $opt{user} = env("username");
+    $opt{password} = passwd() unless $opt{key_path};
+
+    debug("ssh opt: ", \%opt);
 
     for my $host(@_)
     {
         $ssh{$host} && !$ssh{$host}->check_master && delete $ssh{$host};
-        $ssh{$host} ||= Net::OpenSSH->new( $host, user => $user, password => $pwd, %OPT);
+        $ssh{$host} ||= Net::OpenSSH->new($host, %opt);
     }
 
     for my $host(@_)
@@ -72,28 +77,28 @@ sub run
         $count += 1;
         my($c_str, $ssh, $output) = "$count/". scalar @$hosts;
 
-        if( $result{$host} )
+        if($result{$host})
         {
             result($c_str, 0, "$host done..");
             push @fail, $host;
             next;
         }
 
-        $ssh = Zed::SSHPool::get_ssh( $host );
+        $ssh = Zed::SSHPool::get_ssh($host);
         
         if($type eq 'cmd')
         {
 
-            $output = $ssh->capture( @params );
+            $output = $ssh->capture(@params);
             $result{$host} = $output;
     
         }elsif($type eq 'get'){
 
-            $ssh->scp_get( @params );
+            $ssh->scp_get(@params);
 
         }elsif($type eq 'put'){
 
-            $ssh->scp_put( @params );
+            $ssh->scp_put(@params);
         }
 
         result($c_str, !$ssh->error, "$host done..");

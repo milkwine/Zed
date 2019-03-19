@@ -53,10 +53,11 @@ Zed::Config::Space->dump;
 __DATA__
 ---
 Env:
-  username: nobody
   batch:
     idc: ^.+?\..+?\.(.+?)\.
   macro:
+    addsudo: 'cmd sudo echo "foo ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers'
+    adduser: cmd sudo useradd -m foo -p pwd
     ip: cmd /sbin/ip addr|grep inet|grep -v 127.0.0.1|awk "{print \$2}"|awk -F"/"
       "{print \$1}"
   plugin:
@@ -74,6 +75,7 @@ Env:
   - Zed::Plugin::Host::Use
   - Zed::Plugin::Host::Batch
   - Zed::Plugin::Host::Checkout
+  username: nobody
 Space:
   foo:
   - 127.0.0.1
