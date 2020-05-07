@@ -18,14 +18,17 @@ unless($home->is_dir)
 {
     text "Init zed working directory..";
     die "Init fail!(Can't mkdir $home: $!)" unless $home->mkpath; 
-    my $conf = YAML::XS::Load join '', <DATA>;
+}
 
-    for(keys %$conf)
+my $conf = YAML::XS::Load join '', <DATA>;
+for(keys %$conf)
+{
+    my $file = path($home, $_)->canonpath;
+    unless(-f $file)
     {
-        text "Gen file ", path($home, $_)->canonpath, "..";
-        YAML::XS::DumpFile path($home, $_) => $conf->{$_} 
+        text "Gen file ", $file, "..";
+        YAML::XS::DumpFile $file => $conf->{$_} 
     }
-    text "Done..\n" ;
 }
 
 $ENV{ZED_HOME} = $home->realpath;

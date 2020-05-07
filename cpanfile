@@ -12,6 +12,7 @@ requires 'Term::ReadLine';
 requires 'Term::ReadLine::Gnu';
 requires 'Term::ReadPassword';
 requires 'YAML::XS';
+requires 'IO::Pty';
 
 on test => sub {
     requires 'Test::More', '0.96';
