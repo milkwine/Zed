@@ -5,7 +5,7 @@ Zed - Remote execution shell over SSH
 # SYNOPSIS
 
     # Just run zed
-    > zed
+    > docker run -it --rm -v ~/.zed:/root/.zed -v /tmp/:/tmp/ milkwine/zed:latest
 
     Welcome nobody~!
     (Type 'help' to show more commands)
@@ -40,6 +40,12 @@ Zed - Remote execution shell over SSH
 
     # then you can use the suc group
     > foo@zed> use default.suc
+
+    # get remote file
+    > foo@zed> get /tmp/fileA /tmp/fileA
+
+    # transfer local file to remote
+    > foo@zed> put /tmp/scriptA.sh /tmp/
 
     # show more commands
     > help
